@@ -25,7 +25,7 @@
 >
 > 다익스트라 알고리즘은 노드 간의 최단 경로 찾기 알고리즘! \(방향, 무방향 상관없음\)
 
-다익스트라 알고리즘의 핵심은 우선순위 큐이며 Java에서는 PriorityQueue를 기본 제공한다.
+다익스트라 알고리즘의 핵심은 우선순위 큐이며 Java util에서는 PriorityQueue를 기본 제공한다.
 
 그래프 문제는 해결하는데 두 가지 자료구조를 사용할 수 있다.
 
@@ -51,8 +51,6 @@ class Node {}
 ArrayList<Edge> edges[] = new ArrayList<Edge>[10000];
 ```
 
-
-
 전체 Java코드는 아래와 같다.
 
 ```java
@@ -65,8 +63,8 @@ import java.util.StringTokenizer;
 
 class Edge {
     public int to;
-    public double noise;
-    
+    public double noise;    // edge의 noise
+
     public Edge(int to, double noise) {
         this.to = to;
         this.noise = noise;
@@ -75,13 +73,13 @@ class Edge {
 
 class Node implements Comparable<Node> {
     public int index;
-    public double noise;
-    
+    public double noise;    // 해당 노드까지 증폭된 noise
+
     public Node(int index, double noise) {
         this.index = index;
         this.noise = noise;
     }
-    
+
     @Override
     public int compareTo(Node o) {
         return Double.compare(this.noise, o.noise);
@@ -96,11 +94,11 @@ public class Main {
     public static void main(String[] args) throws Exception {
 //        long start = System.currentTimeMillis();
         System.setIn(new FileInputStream("sample_input.txt"));
-        
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        
+
         int N = Integer.parseInt(br.readLine());
-        
+
         for (int i = 0; i < N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             int V = Integer.parseInt(st.nextToken());
@@ -111,26 +109,26 @@ public class Main {
             for (int j = 0; j < V; j++) {
                 edges[j] = new ArrayList<Edge>();
             }
-            
+
             for (int j = 0; j < E; j++) {
                 st = new StringTokenizer(br.readLine());
                 int from = Integer.parseInt(st.nextToken());
                 int to = Integer.parseInt(st.nextToken());
                 double noise = Double.parseDouble(st.nextToken());
-                
+
                 edges[from].add(new Edge(to, noise));
                 edges[to].add(new Edge(from, noise));
             }
-            
-            
+
+
             // PriorityQueue 초기화
             pq.clear();
             pq.add(new Node(0, 1.0));
             result = new double[V];
-            
+
             while(!pq.isEmpty()) {
                 Node current = pq.poll();
-                
+
                 for (Edge edge : edges[current.index]) {
                     if (edge.to == 0) {
                         continue;
@@ -149,7 +147,7 @@ public class Main {
             }
             System.out.printf("%.10f\n", result[V - 1]);
         }
-        
+
         br.close();
         //System.out.println(System.currentTimeMillis() - start + "ms");
     }
